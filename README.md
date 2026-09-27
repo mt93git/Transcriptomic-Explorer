@@ -1,69 +1,68 @@
-# Transcriptomic Explorer (v2.0)
+# Transcriptomic Explorer (v2.0) — NeuMapp Initiative
 
-**An R/Shiny Dashboard for Interactive Single-Cell Analysis**
+[![R Version](https://img.shields.io/badge/R-%3E%3D4.0.0-blue.svg)](https://www.r-project.org/)
+[![Shiny](https://img.shields.io/badge/Framework-Shiny%20%7C%20bslib-2C3E50.svg)](https://shiny.posit.co/)
+[![Bioconductor](https://img.shields.io/badge/Bioc-Seurat%20v5-brightgreen.svg)](https://satijalab.org/seurat/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## 1. Overview
-The **Transcriptomic Explorer** is a lightweight, standalone application designed to facilitate the exploration of Single-Cell RNA-seq (scRNA-seq) data. It provides a graphical interface for the **Seurat** computational framework, allowing researchers to visualize dimensionality reduction, perform real-time subsetting, and calculate differential expression without writing code.
+> **Interactive Single-Cell RNA-seq Analytical Dashboard & Exploratory Frontend of the NeuMapp Suite.**  
+> *Developed by Maxence Tricaud (Libreros Lab — Yale University / Université Laval).*
 
-**Primary Capabilities:**
-* **Visualization:** Interactive UMAP plotting with customizable density, contour, and "glow" overlays.
-* **Comparative Analysis:** "Split-View" and "Side-by-Side" modes for comparing experimental conditions.
-* **Subsetting & Reprojection:** Select cell populations based on metadata or gene expression thresholds and re-run the analysis pipeline (Normalize ? Scale ? PCA ? UMAP) in real-time.
-* **Differential Expression:** Automated identification of marker genes (One-vs-All or Pairwise comparisons) with integrated Heatmaps.
+---
 
-## 2. Key Features
+## 1. Overview & Scope within NeuMapp
 
-### ?? Dimensionality Reduction (UMAP)
-* **Sided/Split Visualization:** Facet plots by metadata (e.g., \Condition\, \Sample\) to assess batch effects or biological shifts.
-* **Density Overlays:** Toggle density contours and greyscale modes to visualize cell concentration in high-density clusters.
-* **Customizable Aesthetics:** Granular control over point size, transparency, and color palettes (Viridis, RColorBrewer, Custom Hex).
+**Transcriptomic Explorer** is the dedicated interactive exploration engine of the **NeuMapp** computational initiative. Built on top of the **Seurat** ecosystem (with native support for Seurat v5 Assay5 multi-layer architectures), it allows biomedical researchers to interrogate cell state heterogeneity, inspect high-resolution manifold embeddings, and compute differential gene expression without requiring manual coding.
 
-### ?? Real-Time Analysis Pipeline
-* **Dynamic Re-Clustering:** Adjust Leiden/Louvain resolution sliders to explore clustering granularity instantly.
-* **Advanced Subsetting Engine:** Filter cells using:
-    * **Categorical Metadata:** (e.g., specific clusters or cell types).
-    * **Numerical Features:** Filter based on specific gene expression levels.
-    * **Composed Markers:** Compute "Signature Scores" (e.g., Inflammation Score, Cell Cycle Score) and filter cells that exceed a specific threshold.
-* **Reprojection Logic:** When subsetting, the app intelligently detects **Seurat v5** vs **Legacy** objects. It re-processes the subset (JoinLayers if necessary, Normalize, Scale, PCA, UMAP) to generate an accurate projection of the isolated population.
+---
 
-### ?? Marker & Distribution Analysis
-* **Multi-Gene Visualization:** Dot Plots and Feature Grids for visualizing gene lists across groups.
-* **Composition Analysis:** Stacked bar charts and donut plots to visualize cluster composition across experimental groups.
-* **Differential Expression (DEG):**
-    * **Pairwise:** Compare Group A vs. Group B.
-    * **Global:** Identify markers distinguishing one cluster from all others.
-    * **Export:** Download DEG tables as CSV.
+## 2. Key Analytical Features
 
-## 3. Requirements & Dependencies
+* **Advanced Manifold Visualization:** Real-time 2D UMAP projection with density contours, cell density glow filters, and multi-condition split facet modes.
+* **Dynamic On-the-Fly Subsetting & Reprojection:** Graphically select cell clusters or metadata subsets and recalculate normalization, scaling, PCA, and UMAP embeddings in real time.
+* **Marker Discovery Backend:** Automated differential expression testing (One-vs-All or Pairwise contrasts) coupled to hierarchical heatmap generation.
+* **Vector Graphics Export:** Direct download of publication-ready PDF and SVG plots.
 
-The application requires **R (v4.0+)** and the following packages:
+---
 
-* **Core:** \shiny\, \Seurat\ (v4 or v5 compatible), \dplyr\
-* **Visualization:** \ggplot2\, \plotly\, \pheatmap\, \ggrepel\, \RColorBrewer\, \iridis\, \colourpicker\, \ggrastr\
-* **UI/UX:** \shinyjqui\ (resizable plots), \shinycssloaders\, \shinyjs\, \DT\
+## 3. ⚡ Quick Start & Verification
 
-## 4. Usage Instructions
+### Launch in RStudio
+```R
+# 1. Clone the repository
+# git clone https://github.com/mt93git/Transcriptomic-Explorer.git
 
-### Step 1: Setup
-Ensure all dependencies are installed. You can run the included initialization block in the script, or install manually:
-\\\
-install.packages(c("shiny", "Seurat", "ggplot2", "dplyr", "DT", "shinyjqui", "patchwork", "ggrepel", "RColorBrewer", "plotly", "shinycssloaders", "shinyjs", "scales", "colourpicker", "ggnewscale", "tibble", "viridis", "pheatmap", "harmony", "ggrastr", "MASS", "stringr"))
-\\\
-
-### Step 2: Launch
-Run the application from RStudio:
-\\\
+# 2. Launch the application
 shiny::runApp("app.R")
-\\\
+```
 
-### Step 3: Load Data
-* Upload a pre-processed \.rds\ file (Seurat Object).
-* **Note:** The object must contain a **UMAP** dimensionality reduction slot.
-* **File Size Limit:** Default is set to 3GB.
+### Verification with Built-in Seurat Data
+To immediately test the interface without an external `.rds` file, run this snippet in R:
+```R
+library(Seurat)
+# Save Seurat's built-in PBMC dataset for immediate upload
+saveRDS(pbmc_small, "demo_pbmc.rds")
+# Launch app and select demo_pbmc.rds in the file uploader
+shiny::runApp("app.R")
+```
 
-## 5. Version History
-* **v2.0:** Added Sided/Split UMAP views, Density overlays, Composed Marker Scoring, and automated Seurat v5 compatibility patches (Assay5 JoinLayers).
-* **v1.0:** Initial release with basic visualization and DEG features.
+---
 
-## 6. Citation
-If used in research, please cite the Seurat R package (Satija Lab) and this repository.
+## 4. Repository Structure
+
+```
+Transcriptomic-Explorer/
+├── app.R                       # Full interactive Shiny dashboard (1300+ lines)
+├── LICENSE                     # MIT Open-Source License
+├── .gitignore
+└── README.md
+```
+
+---
+
+## 5. License & Citation
+
+Distributed under the **MIT License**. See `LICENSE` for details.
+
+Citation:
+> Tricaud M. *Transcriptomic Explorer: Interactive Single-Cell RNA-seq Exploration Engine for the NeuMapp Initiative*. Yale University / Université Laval (2025-2026). GitHub: `https://github.com/mt93git/Transcriptomic-Explorer`.
