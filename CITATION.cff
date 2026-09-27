@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use this software in academic research, please cite it as below."
+authors:
+  - family-names: "Tricaud"
+    given-names: "Maxence"
+    affiliation: "Yale University / Université Laval"
+    email: "mtricaud.cetri@gmail.com"
+  - name: "Yale Research Hub"
+title: "Transcriptomic Explorer — NeuMapp Initiative"
+version: "2.0.0"
+date-released: 2025-11-24
+url: "https://github.com/mt93git/Transcriptomic-Explorer"
+repository-code: "https://github.com/mt93git/Transcriptomic-Explorer"
+license: "MIT"
+abstract: "Interactive single-cell RNA-seq analytical dashboard and exploratory frontend of the NeuMapp computational suite, compatible with Seurat v5 multi-layer assays, interactive UMAP density projections, and automated differential marker gene discovery."
+keywords:
+  - "single-cell"
+  - "scrna-seq"
+  - "seurat"
+  - "r-shiny"
+  - "transcriptomics"
+  - "umap"
+  - "bioinformatics"
