@@ -1,14 +1,15 @@
 """
-NeuMapp Spatial Suite :: Integrative Cross-Modality Pipeline
-============================================================
+NeuMapp Explorer :: Integrative Neutrophil Architecture Pipeline
+=================================================================
 Author: Maxence Tricaud
 License: MIT License
 
-Integrates scRNA-seq trajectory inference and spatial transcriptomics niche deconvolution:
-1. Reconstructs differentiation trajectories and pseudotime vectors from single-cell profiles.
-2. Derives dynamic signature weights for evolving cellular states.
-3. Deconvolves 2D spatial microenvironment arrays to project developmental lineages
-   into physical tissue niches.
+Integrates scRNA-seq trajectory inference and spatial tissue hub deconvolution
+for neutrophil developmental ontogeny and tissue compartmentalization:
+1. Reconstructs differentiation trajectories, chronomic aging, and pseudotime vectors from single-cell profiles.
+2. Derives dynamic signature weights for evolving neutrophil maturation states.
+3. Deconvolves 2D spatial microenvironment arrays and tissue compartments to project
+   neutrophil subsets into physical anatomical hubs (Bone Marrow, Blood, Marginal Pools, Target Organs).
 """
 
 import sys
@@ -22,11 +23,11 @@ from .spatial_deconvolution import SpatialNicheDeconvolver, generate_synthetic_s
 
 def run_integrative_pipeline():
     print("==========================================================================")
-    print("  NeuMapp Spatial Suite :: Integrative Trajectory & Spatial Niche Pipeline ")
+    print("  NeuMapp Explorer :: Neutrophil Architecture & Spatial Hub Pipeline     ")
     print("==========================================================================")
 
     # 1. Single-Cell Trajectory Inference
-    print("\n--- Step 1: Inferring Differentiation Trajectory from scRNA-seq ---")
+    print("\n--- Step 1: Inferring Maturation & Chronomics Trajectory from scRNA-seq ---")
     df_expr, cluster_labels, _ = generate_synthetic_trajectory_data(n_cells=120)
     traj_engine = SingleCellTrajectoryEngine(n_neighbors=12, n_components=3)
     diff_coords, evals, T_markov = traj_engine.compute_diffusion_map(df_expr.values)

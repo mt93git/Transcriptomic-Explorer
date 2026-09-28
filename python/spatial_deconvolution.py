@@ -1,14 +1,18 @@
 """
-NeuMapp Spatial Suite :: Spatial Niche Deconvolution Engine
-===========================================================
+NeuMapp Explorer :: Neutrophil Spatial Niche & Compartmentalization Engine
+==========================================================================
 Author: Maxence Tricaud
 License: MIT License
 
-Integrative Python module for high-resolution spatial transcriptomics deconvolution
-and microenvironment niche mapping:
-1. Reference-based cell-type proportion deconvolution per spatial spot (Visium/ST/Xenium).
-2. Constrained non-negative optimization (NNLS with L1 sparsity and sum-to-one constraints).
-3. Spatial niche colocalization network and Moran's I spatial autocorrelation analysis.
+Integrative Python module for high-resolution deconvolution of neutrophil
+tissue compartmentalization hubs and spatial microenvironments (inspired by the
+organ-specific vascular niche and chronomics paradigm of Andrés Hidalgo et al.,
+Cell 2019, Cell 2020):
+1. Deconvolves neutrophil phenotypic states across tissue compartments (Bone Marrow,
+   Blood Circulation, Lung Marginal Pool, Spleen Red Pulp, Inflammatory/Tumor Niches)
+   and spatial transcriptomic spots (10x Visium / ST / Xenium).
+2. Constrained non-negative matrix decomposition (NNLS with L1 sparsity and sum-to-one constraints).
+3. Spatial microenvironment niche colocalization network and Moran's I spatial autocorrelation.
 """
 
 import os
@@ -139,7 +143,13 @@ def generate_synthetic_spatial_benchmark() -> Tuple[pd.DataFrame, pd.DataFrame, 
     """Generates synthetic Visium spatial array and scRNA-seq cell-type reference."""
     np.random.seed(42)
     genes = [f"Gene_{i:03d}" for i in range(1, 101)]
-    cell_types = ["Neutrophil_CD66b", "Macrophage_TAM", "CD8_T_Cell", "Endothelial", "Fibroblast_CAF"]
+    cell_types = [
+        "BM_PreNeu_Reserve_Hub",
+        "Blood_Circulating_Mature_Hub",
+        "Lung_Marginal_Pool_Hub",
+        "Spleen_RedPulp_Hub",
+        "Inflammatory_Niche_N1_Hub"
+    ]
     
     # Reference signatures
     S = np.random.gamma(shape=2.0, scale=2.0, size=(len(genes), len(cell_types)))
@@ -160,8 +170,8 @@ def generate_synthetic_spatial_benchmark() -> Tuple[pd.DataFrame, pd.DataFrame, 
     true_W = np.zeros((len(cell_types), len(coords_df)))
     for j, (_, row) in enumerate(coords_df.iterrows()):
         dist_to_center = np.sqrt((row["x"] - 90)**2 + (row["y"] - 90)**2)
-        true_W[0, j] = np.exp(-dist_to_center / 40)       # Neutrophils clustered at center
-        true_W[1, j] = 1.0 - np.exp(-dist_to_center / 60) # Macrophages surrounding
+        true_W[0, j] = np.exp(-dist_to_center / 40)       # BM PreNeu clustered at center niche
+        true_W[1, j] = 1.0 - np.exp(-dist_to_center / 60) # Mature circulating surrounding
         true_W[2:, j] = 0.2
         true_W[:, j] /= np.sum(true_W[:, j])
 
@@ -173,18 +183,18 @@ def generate_synthetic_spatial_benchmark() -> Tuple[pd.DataFrame, pd.DataFrame, 
 
 
 def main():
-    parser = argparse.ArgumentParser(description="NeuMapp Spatial Niche Deconvolution CLI")
+    parser = argparse.ArgumentParser(description="NeuMapp Explorer :: Neutrophil Spatial Niche Deconvolution CLI")
     parser.add_argument("--output-csv", type=str, default="spatial_niche_proportions.csv")
     args = parser.parse_args()
 
     print("==================================================================")
-    print("      NeuMapp Spatial Suite :: Spatial Deconvolution Engine       ")
+    print("   NeuMapp Explorer :: Neutrophil Spatial Hub Deconvolution Engine")
     print("==================================================================")
-    print("Generating synthetic 100-spot Visium microenvironment array...")
+    print("Generating synthetic 100-spot microenvironment array with neutrophil hubs...")
     spatial_df, ref_df, coords_df = generate_synthetic_spatial_benchmark()
 
     print(f"Spatial Grid Dimensions: {spatial_df.shape[1]} spots x {spatial_df.shape[0]} genes")
-    print(f"Reference Cell Types: {list(ref_df.columns)}")
+    print(f"Neutrophil Architectural Hubs: {list(ref_df.columns)}")
 
     print("\nExecuting constrained non-negative spatial deconvolution...")
     deconvolver = SpatialNicheDeconvolver(l1_penalty=0.02)
@@ -197,9 +207,9 @@ def main():
     coloc = deconvolver.compute_spatial_colocalization(props, coords_df, radius_cutoff=35.0)
     print(coloc.round(3))
 
-    neu_prop = props["Neutrophil_CD66b"].values
+    neu_prop = props["BM_PreNeu_Reserve_Hub"].values
     moran = deconvolver.compute_morans_i(neu_prop, coords_df[["x", "y"]].values)
-    print(f"\nMoran's I Spatial Autocorrelation (Neutrophil_CD66b Niche): {moran:.4f} (Strong Spatial Clustering)")
+    print(f"\nMoran's I Spatial Autocorrelation (BM_PreNeu_Reserve_Hub): {moran:.4f} (Significant Spatial Clustering)")
 
     props.to_csv(args.output_csv)
     print(f"\nDeconvolution proportions exported to: {args.output_csv}")

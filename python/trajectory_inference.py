@@ -1,15 +1,18 @@
 """
-NeuMapp Spatial Suite :: scRNA-seq Trajectory & Pseudotime Inference Engine
-===========================================================================
+NeuMapp Explorer :: Neutrophil Trajectory & Chronomics Dynamics Engine
+======================================================================
 Author: Maxence Tricaud
 License: MIT License
 
 Integrative Python module for single-cell trajectory inference, diffusion pseudotime (DPT),
-and Markovian cell-state lineage fate dynamics:
+and Markovian cell-state lineage fate dynamics of neutrophil ontogeny and aging
+(inspired by the neutrophil developmental and chronomics paradigm of Andrés Hidalgo et al.,
+Cell 2019, Cell 2020):
 1. Constructs k-NN manifold graph and adaptive Gaussian transition kernel.
 2. Computes Diffusion Map spectral embeddings (Diffusion Components DC1, DC2, DC3).
-3. Computes Diffusion Pseudotime (DPT) from designated progenitor/root cell states.
-4. Models cluster-level Markovian transition probability graph (PAGA-style connectivity).
+3. Computes Diffusion Pseudotime (DPT) from designated BM progenitor root states.
+4. Models cluster-level Markovian transition probability graph (PAGA-style connectivity)
+   tracing maturation from Pre-Neu to Mature, Aged (CXCR4_high), and Activated TAN phenotypes.
 5. Dynamic gene expression kinetics along the inferred differentiation trajectory.
 """
 
@@ -127,34 +130,34 @@ def generate_synthetic_trajectory_data(n_cells: int = 150) -> Tuple[pd.DataFrame
     # Pseudotime progression t in [0, 1]
     t = np.linspace(0, 1, n_cells)
     
-    # 3 clusters: Progenitor (t < 0.35), Lineage_A (branch 1), Lineage_B (branch 2)
+    # 3 clusters: Pre_Neutrophil_CD117+ (t < 0.35), Mature_Circulating (branch 1), Aged_CXCR4high_Chronomic (branch 2)
     labels = []
     expr_list = []
     
     for val in t:
         if val < 0.35:
-            labels.append("HSPC_Progenitor")
+            labels.append("Pre_Neutrophil_CD117+")
             # Progenitor markers high
             g_prog = 3.5 * (1.0 - val) + np.random.normal(0, 0.2)
-            g_linA = 0.2 + np.random.normal(0, 0.1)
-            g_linB = 0.2 + np.random.normal(0, 0.1)
+            g_mat = 0.2 + np.random.normal(0, 0.1)
+            g_aged = 0.2 + np.random.normal(0, 0.1)
         elif np.random.rand() > 0.5:
-            labels.append("Neutrophil_Effector")
+            labels.append("Mature_Circulating_CD62L+")
             g_prog = 0.5 * (1.0 - val) + np.random.normal(0, 0.1)
-            g_linA = 4.0 * (val - 0.3) + np.random.normal(0, 0.2)
-            g_linB = 0.1 + np.random.normal(0, 0.1)
+            g_mat = 4.0 * (val - 0.3) + np.random.normal(0, 0.2)
+            g_aged = 0.1 + np.random.normal(0, 0.1)
         else:
-            labels.append("Monocyte_Macrophage")
+            labels.append("Aged_CXCR4high_Chronomic")
             g_prog = 0.5 * (1.0 - val) + np.random.normal(0, 0.1)
-            g_linA = 0.1 + np.random.normal(0, 0.1)
-            g_linB = 4.0 * (val - 0.3) + np.random.normal(0, 0.2)
+            g_mat = 0.1 + np.random.normal(0, 0.1)
+            g_aged = 4.0 * (val - 0.3) + np.random.normal(0, 0.2)
 
         # 10 latent features
-        latent = [g_prog, g_linA, g_linB] + list(np.random.normal(0, 0.5, 7))
+        latent = [g_prog, g_mat, g_aged] + list(np.random.normal(0, 0.5, 7))
         expr_list.append(latent)
 
     cell_ids = [f"Cell_{i:04d}" for i in range(1, n_cells + 1)]
-    feature_names = ["Marker_Progenitor_CD34", "Marker_Neutrophil_CD66b", "Marker_Monocyte_CD14"] + [f"PCA_Dim_{j}" for j in range(4, 11)]
+    feature_names = ["Marker_CD117_Kit", "Marker_CD62L_Mature", "Marker_CXCR4_Aging"] + [f"PCA_Dim_{j}" for j in range(4, 11)]
     df_expr = pd.DataFrame(expr_list, index=cell_ids, columns=feature_names)
     labels_arr = np.array(labels)
 
@@ -162,15 +165,15 @@ def generate_synthetic_trajectory_data(n_cells: int = 150) -> Tuple[pd.DataFrame
 
 
 def main():
-    parser = argparse.ArgumentParser(description="NeuMapp Trajectory & Pseudotime Inference CLI")
+    parser = argparse.ArgumentParser(description="NeuMapp Explorer :: Neutrophil Trajectory & Chronomics CLI")
     parser.add_argument("--n-neighbors", type=int, default=15)
     parser.add_argument("--output-csv", type=str, default="trajectory_pseudotime_results.csv")
     args = parser.parse_args()
 
     print("==================================================================")
-    print("     NeuMapp Spatial Suite :: scRNA-seq Trajectory Engine         ")
+    print("   NeuMapp Explorer :: Neutrophil Trajectory & Chronomics Engine  ")
     print("==================================================================")
-    print("Synthesizing 150-cell differentiation trajectory manifold...")
+    print("Synthesizing 150-cell neutrophil maturation & aging manifold...")
     df_expr, cluster_labels, df_truth = generate_synthetic_trajectory_data(n_cells=150)
 
     print(f"Cell Manifold Matrix: {df_expr.shape[0]} cells x {df_expr.shape[1]} features")
