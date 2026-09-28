@@ -5,8 +5,7 @@
 [![Bioconductor](https://img.shields.io/badge/Bioc-Seurat%20v5-brightgreen.svg)](https://satijalab.org/seurat/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> **Interactive Single-Cell RNA-seq Analytical Dashboard & Exploratory Frontend of the NeuMapp Suite.**  
-> *Developed by Maxence Tricaud (Libreros Lab — Yale University / Université Laval).*
+> *Developed by Maxence Tricaud.*
 
 ---
 
@@ -27,24 +26,21 @@
 
 ## 3. ⚡ Quick Start & Verification
 
-### Launch in RStudio
-```R
-# 1. Clone the repository
-# git clone https://github.com/mt93git/Transcriptomic-Explorer.git
+### Step 1: Install Dependencies
+```bash
+Rscript setup_dependencies.R
+```
 
-# 2. Launch the application
+### Step 2: Launch in R / RStudio
+```R
 shiny::runApp("app.R")
 ```
 
-### Verification with Built-in Seurat Data
-To immediately test the interface without an external `.rds` file, run this snippet in R:
-```R
-library(Seurat)
-# Save Seurat's built-in PBMC dataset for immediate upload
-saveRDS(pbmc_small, "demo_pbmc.rds")
-# Launch app and select demo_pbmc.rds in the file uploader
-shiny::runApp("app.R")
-```
+### Step 3: Immediate Verification with Curated Demo Data
+The repository includes a curated demo dataset (`demo_data/demo_pbmc_small.rds`) ready for immediate testing.
+1. Run `shiny::runApp("app.R")`.
+2. In the sidebar file uploader, browse and select `demo_data/demo_pbmc_small.rds`.
+3. Explore the 2D UMAP projection, cell annotations, and differential marker expression.
 
 ---
 
@@ -52,7 +48,10 @@ shiny::runApp("app.R")
 
 ```
 Transcriptomic-Explorer/
-├── app.R                       # Full interactive Shiny dashboard (1300+ lines)
+├── app.R                       # Full interactive Shiny dashboard (1360+ lines)
+├── setup_dependencies.R        # Automated dependency installer (CRAN & Bioconductor)
+├── demo_data/
+│   └── demo_pbmc_small.rds     # Curated demo dataset for instant evaluation
 ├── LICENSE                     # MIT Open-Source License
 ├── .gitignore
 └── README.md
@@ -65,4 +64,4 @@ Transcriptomic-Explorer/
 Distributed under the **MIT License**. See `LICENSE` for details.
 
 Citation:
-> Tricaud M. *Transcriptomic Explorer: Interactive Single-Cell RNA-seq Exploration Engine for the NeuMapp Initiative*. Yale University / Université Laval (2025-2026). GitHub: `https://github.com/mt93git/Transcriptomic-Explorer`.
+> Tricaud M. *Transcriptomic Explorer: Interactive Single-Cell RNA-seq Exploration Engine*. (2025-2026). GitHub: `https://github.com/mt93git/Transcriptomic-Explorer`.
