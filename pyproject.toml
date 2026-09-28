@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "neumapp-spatial"
+version = "2.1.0"
+description = "NeuMapp Spatial Suite: Python Engine for Spatial Deconvolution and Trajectory Dynamics"
+authors = [
+    { name = "Maxence Tricaud", email = "mtricaud.cetri@gmail.com" }
+]
+license = { text = "MIT" }
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "numpy>=1.22.0",
+    "scipy>=1.9.0",
+    "pandas>=1.4.0",
+]
+keywords = ["spatial-transcriptomics", "deconvolution", "trajectory-inference", "single-cell", "diffusion-maps", "paga"]
+
+[project.urls]
+Repository = "https://github.com/mt93git/Transcriptomic-Explorer"
