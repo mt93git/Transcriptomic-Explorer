@@ -11,12 +11,9 @@
 
 ---
 
-## 1. Executive Summary & FRQS Dossier Alignment
+## 1. Executive Summary & Scientific Scope
 
-In the official doctoral research dossier (**Section C : Expériences et réalisations**), the platform is designated as:
-> **NeuMapp Explorer** : *Plateforme interactive (R Shiny & Moteur Python) d'investigation multi-omique dédiée à l'exploration du paysage transcriptomique de l'architecture des neutrophiles (inférence de trajectoires scRNA-seq et déconvolution spatiale).*
-
-**NeuMapp Explorer** (maintained in this repository under `Transcriptomic-Explorer`) bridges single-cell transcriptomic resolution (scRNA-seq) with tissue-level compartmental architecture. The suite integrates an interactive **R/Shiny** visualization frontend with an optimized scientific **Python** computing backend.
+**NeuMapp Explorer** (maintained in this repository under `Transcriptomic-Explorer`) is an interactive multi-omic computational platform engineered for investigating the transcriptomic landscape, developmental trajectory dynamics, and tissue compartmentalization architecture of neutrophil functional states. The suite bridges single-cell transcriptomic resolution (scRNA-seq) with tissue-level anatomical hubs, combining an interactive **R/Shiny** visualization frontend with an optimized scientific **Python** computing backend for trajectory inference and spatial niche deconvolution.
 
 ```
                       ┌─────────────────────────────────────────────────────────────┐
@@ -92,8 +89,9 @@ Couples single-cell trajectory kinetics with spatial compartment deconvolution, 
 # 1. Install Python dependencies
 pip install -r requirements.txt
 
-# 2. Run the end-to-end integrative pipeline
-python3 -m python.pipeline_integrative
+# 2. Run the end-to-end integrative pipeline (direct execution or module mode)
+python3 python/pipeline_integrative.py
+# or: python3 -m python.pipeline_integrative
 
 # 3. Run standalone neutrophil spatial hub deconvolution CLI
 python3 python/spatial_deconvolution.py --output-csv spatial_niche_proportions.csv
