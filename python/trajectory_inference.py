@@ -123,6 +123,9 @@ class SingleCellTrajectoryEngine:
         )
         return df_paga
 
+    # Alias for PAGA-style connectivity
+    compute_paga_connectivity = compute_cluster_transition_graph
+
 
 def generate_synthetic_trajectory_data(n_cells: int = 150) -> Tuple[pd.DataFrame, np.ndarray, pd.DataFrame]:
     """Simulates a bifurcating single-cell differentiation manifold."""

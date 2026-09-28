@@ -143,6 +143,9 @@ Transcriptomic-Explorer/
 │   │   └── ui.R
 │   └── seurat_singlecell/      # Seurat v5 Manifold Explorer
 │       └── app.R
+├── tests/                      # Automated unit and integration test suite
+│   ├── test_python_modules.py  # Python deconvolution & trajectory unit tests
+│   └── test_r_integration.R    # R architecture & Shiny launcher test suite
 ├── data/
 │   └── sample_metadata.csv     # Sample and cohort metadata schema
 ├── demo_data/
@@ -152,6 +155,16 @@ Transcriptomic-Explorer/
 ├── CONTRIBUTING.md             # Developer guidelines
 ├── SECURITY.md                 # Security and vulnerability reporting
 └── README.md
+```
+
+### Option C: Automated Unit & Integration Test Suites
+
+```bash
+# Execute Python analytical test suite
+python3 tests/test_python_modules.py
+
+# Execute R architecture and module integration tests
+Rscript tests/test_r_integration.R
 ```
 
 ---
